@@ -1,8 +1,3 @@
-from pprint import pprint as pp
-
-
-# IATA codes - BA127. LO123
-
 class Flight:  # napisane Pascalcasem
     def __init__(self, flight_number, airplane):
         self.airplane = airplane
@@ -81,60 +76,8 @@ class Flight:  # napisane Pascalcasem
         for row in rows:
             for letter in letters:
                 if self.seats[row][letter] is not None:
-                    yield f'{row}{letter}'
+                    yield f'{row}{letter}', self.seats[row][letter]
 
     def print_cards(self, card_printer):
         for seat, passenger in self._get_passengers():
             card_printer(passenger, seat, self.flight_number, self.get_plane())
-
-
-class Airplane:  # klasyczny zapis to 'class Airplane(object, metaclass=Type) , nowy zapis to syntactic sugar
-    def get_num_seats(self):
-        rows, seats = self.seating_plan()
-        return len(rows) * len(seats)
-
-
-class Boeing737Max(Airplane):
-    @staticmethod
-    def get_name():
-        return "Boeing 737Max"
-
-    def seating_plan(self):
-        return range(1, 26), 'ABCDEG'
-
-
-class AirBusA380(Airplane):
-    @staticmethod
-    def get_name():
-        return "Airbus A370"
-
-    def seating_plan(self):
-        return range(1, 51), 'ABCDEGHJK'
-
-
-def printer(passanger, seat, flight_number, airplane):
-    text = f'| Passanger: {passanger}. seat: {seat}, {flight_number}/{airplane} |'
-    border = f'+{"-" * (len(text) - 2)}+'
-    line = f'|{" " * (len(text) - 2)}|'
-
-    frame = '\n'.join([border, line, text, line, border])
-    print(frame)
-
-
-printer('Jarosław K', '12C', 'LO27', 'Cesna')
-
-boeing = Boeing737Max()
-airbus = AirBusA380()
-print(airbus.get_num_seats())
-f = Flight('BA128', boeing)
-# print(f.get_number())
-# print(f.get_airline())
-# print(f.get_plane())
-f.allocate_passenger('25G', 'Marcin')
-f.allocate_passenger('1A', 'Gabi')
-f.allocate_passenger('1B', 'Hania')
-# f.relocate_passenger('1G', '1A')
-
-pp(f.get_num_empty_seats())
-pp(f.print_cards(printer))
-pp(boeing.get_num_seats())
